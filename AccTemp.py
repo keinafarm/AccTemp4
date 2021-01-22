@@ -1,7 +1,7 @@
 """
    積算温度をエクセルっファイルに出力するアプリケーション
 """
-__version__ = "0.1.0"
+__version__ = "0.9.0"
 __author__ = "Akira Yoshida <akiracraftwork@infoseek.jp>"
 
 #   このクラスが、メインのクラスになります
