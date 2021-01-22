@@ -2,7 +2,7 @@
 
 from MeteorologicalAgency import MeteorologicalAgency
 import pandas as pd
-from datetime import datetime, date
+from datetime import datetime, date, time
 
 """
     気温データを扱う
@@ -12,7 +12,30 @@ from datetime import datetime, date
 """
 
 
+def change_to_datetime(data):
+    """
+    入力データはすべてdatetimeに変換してから受け売れる
+    :param data: 変換するデータ
+    :return: datetime型
+    """
+    if type(data) is date:
+        data = datetime.combine(data, time())
+    return data
+
+
+def change_to_date(data):
+    """
+    出力データはすべてdateに変換してから出す
+    :param data: 変換するデータ
+    :return: date型
+    """
+    if type(data) is datetime:
+        data = data.date()
+    return data
+
+
 class TemperatureCalculator:
+
     def __init__(self, start_date, end_date, meteorological):
         """
         既に生成されたオブジェクトでの呼び出し時、既に読み込んだ温度データの期間をチェックし
@@ -22,6 +45,11 @@ class TemperatureCalculator:
         :param end_date:
         :param meteorological:
         """
+
+        # 計算している間にdatetimeとdateがごっちゃになるので、datetimeに合わせておく
+        start_date = change_to_datetime(start_date)
+        end_date = change_to_datetime(end_date)
+
         if hasattr(self, 'prefecture'):
             if self.check_period(start_date, end_date):
                 return
@@ -40,14 +68,18 @@ class TemperatureCalculator:
                                              columns=['date', 'mean temperature', 'average temperature'])
         self.temperature_data.set_index('date', inplace=True)  # 日付カラムをindexにする
 
-    def get_accumulated_temperature(self, start, end):
+    def get_accumulated_temperature(self, start_date, end_date):
         """
         積算温度を得る
-        :param start: 開始日
-        :param end: 終了日
+        :param start_date: 開始日
+        :param end_date: 終了日
         :return: 積算温度
         """
-        out = self.temperature_data[start:end]['mean temperature'].sum()
+        # 計算している間にdatetimeとdateがごっちゃになるので、datetimeに合わせておく
+        start_date = change_to_datetime(start_date)
+        end_date = change_to_datetime(end_date)
+
+        out = self.temperature_data[start_date:end_date]['mean temperature'].sum()
         return out
 
     def get_average_temperature(self, specified_date):
@@ -56,47 +88,55 @@ class TemperatureCalculator:
         :param specified_date:取得する日にち
         :return:平年温度
         """
+        specified_date = change_to_datetime(specified_date)
         out = self.temperature_data.at[pd.to_datetime(specified_date), 'average temperature']
         return out
 
-    def check_period(self, start, end):
+    def check_period(self, start_date, end_date):
         """
         現在抱えている値が、指定した期間を含んでいるか
-        :param start: 開始日
-        :param end: 終了日
+        :param start_date: 開始日
+        :param end_date: 終了日
         :return: True = 含んでいる False = 含んでいない
         """
+        # 計算している間にdatetimeとdateがごっちゃになるので、datetimeに合わせておく
+        start_date = change_to_datetime(start_date)
+        end_date = change_to_datetime(end_date)
+
         if self.start_date is None:
             return False
-        if self.start_date >= start:
+        if self.start_date >= start_date:
             return False
-        if self.end_date <= end:
+        if self.end_date <= end_date:
             return False
         return True
 
-    def forecasted_day(self, start, target_temperature):
+    def forecasted_day(self, start_date, target_temperature):
         """
         積算温度が指定した温度になる日を予測する
-        :param start: 積算開始日
+        :param start_date: 積算開始日
         :param target_temperature: 目標積算温度
         :return:到達予測日
         """
         # 取得した日付よりも以前からの積算温度は勘弁してね
-        if start < self.start_date:
+        # 計算している間にdatetimeとdateがごっちゃになるので、datetimeに合わせておく
+        start_date = change_to_datetime(start_date)
+
+        if start_date < self.start_date:
             raise ValueError("取得した日以前の日付が指定されました。start is %s < self.start_date is %s" % (
-                start.strftime("%Y/%m/%d"), self.start_date.strftime("%Y/%m/%d")))
+                start_date.strftime("%Y/%m/%d"), self.start_date.strftime("%Y/%m/%d")))
 
         # 積算開始日から最終温度取得日までの積算温度を計算する
         accumulated_temperature = 0
-        current_day = start
-        for row in self.temperature_data[start:self.end_date].itertuples():
+        current_day = start_date
+        for row in self.temperature_data[start_date:self.end_date].itertuples():
             current_day = row.Index
             temperature = row[1]  # 平均気温
             accumulated_temperature += temperature
             if accumulated_temperature >= target_temperature:
                 break
 
-#           print(current_day, temperature, accumulated_temperature)
+        #           print(current_day, temperature, accumulated_temperature)
 
         if accumulated_temperature >= target_temperature:
             return_day = current_day.to_pydatetime()
@@ -106,7 +146,8 @@ class TemperatureCalculator:
             return return_day2  # Pandas.Timestampをpython datetimeに変換して返す
 
         # 平年温度が取得できているかチェックする
-        last_day = date(self.end_date.year - 1, self.end_date.month, self.end_date.day)
+        last_day = change_to_datetime(date(self.end_date.year - 1, self.end_date.month, self.end_date.day))
+
         if last_day < self.start_date:
             raise ValueError("平年温度を取得するデータがありません。last_day is %s < self.start_date is %s" % (
                 last_day.strftime("%Y/%m/%d"), self.start_date.strftime("%Y/%m/%d")))
@@ -119,7 +160,7 @@ class TemperatureCalculator:
             if accumulated_temperature >= target_temperature:
                 break
 
-#           print(current_day, temperature, accumulated_temperature)
+        #           print(current_day, temperature, accumulated_temperature)
 
         return_day = date(current_day.year + 1, current_day.month, current_day.day)
         return return_day

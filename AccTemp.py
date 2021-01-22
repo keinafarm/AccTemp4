@@ -246,7 +246,7 @@ class AccTempGui(AccTempFrame):
             error_text += " 地点が指定されていません\n"
         if self.spin_ctrl_title_line_no.GetValue() <= 0:
             error_text += " タイトルの行番号が指定されていません\n"
-        if len(self.check_list_box_target_sheet_name.GetCheckedStrings()) == 0:
+        if len(self.check_list_box_target_shee_name.GetCheckedStrings()) == 0:
             error_text += " 対象となるシート名が指定されていません\n"
         if self.combo_box_start_date.GetStringSelection() == '':
             error_text += " 積算温度起算日のカラムが指定されていません\n"
@@ -307,7 +307,8 @@ class AccTempGui(AccTempFrame):
         :param event:
         :return:
         """
-        self.check_input_data()  # 入力されたデータをチェックする
+        if not self.check_input_data():  # 入力されたデータをチェックする
+            return
         self.get_column_names()  # 各カラム名をワークシートオブジェクトに通知する
 
         try:
