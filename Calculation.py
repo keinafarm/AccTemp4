@@ -1,4 +1,3 @@
-from ATWorkBook import ATWorkBook
 import datetime as dt
 from TemperatureCalculator import TemperatureCalculator
 

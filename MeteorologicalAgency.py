@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
 """
+気象庁から平均気温と平年気温のデータを取得する
+
 https://gist.github.com/barusan/3f098cc74b92fad00b9bb4478da35385
 を参照した
-
-気象庁から平均気温と平年気温のデータを取得する
 
 """
 from datetime import date
 import urllib.request
 import lxml.html
 from datetime import datetime as dt
-import copy
+
 
 def encode_data(data):
     """
@@ -156,7 +156,8 @@ class PrefectureList:
         """
         return self.data[prefecture]
 
-class   StationList:
+
+class StationList:
     def __init__(self, prefecture_id):
         """
         地点リストを取得する
@@ -167,8 +168,8 @@ class   StationList:
         # 気温をサポートしていない地点を省く
         temp_dict = self.data.copy()
         for item in temp_dict:
-            if self.data[item]['flags']['temp'] == False:
-                del self.data[ item ]
+            if not self.data[item]['flags']['temp']:
+                del self.data[item]
 
     def get_list(self):
         """
@@ -181,11 +182,12 @@ class   StationList:
     def get_id(self, station):
         """
         指定した県名に対するIDを得る
-        :param prefecture:
-        :return:県名に対するID
+        :param station: 地点名
+        :return:地点に対するID
         """
         station_data = self.data[station]
         return station_data['id']
+
 
 class MeteorologicalAgency:
     """
@@ -199,6 +201,10 @@ class MeteorologicalAgency:
         self.prefecture = None
         self.station = None
         self.csv = None
+        self.prefecture_obj = None
+        self.prefecture_id = None
+        self.station_obj = None
+        self.station_id = None
 
     def get_prefecture_list(self):
         self.prefecture_obj = PrefectureList()
@@ -242,7 +248,7 @@ class MeteorologicalAgency:
         for item in self.csv.splitlines(True)[6:]:  # 最初の6行はタイトルなので無視する
             line_data = item.split(',')  # カンマで分割する
             if line_data[4] == '':
-                line_data[4] = line_data[1]             # 平年値が含まれていない場合は去年のデータにする
+                line_data[4] = line_data[1]  # 平年値が含まれていない場合は去年のデータにする
             data_pair = [dt.strptime(line_data[0], '%Y/%m/%d'), float(line_data[1]), float(line_data[4])]
             # 日付型と浮動小数に変換する
             out_list.append(data_pair)
@@ -253,10 +259,10 @@ if __name__ == "__main__":
     obj = MeteorologicalAgency()
     print(obj.get_prefecture_list())
     obj.set_prefecture("高知")
-#    obj.set_prefecture("根室")
+    #    obj.set_prefecture("根室")
     print(obj.get_station_list())
     obj.set_station("窪川")
-#    obj.set_station("羅臼")
+    #    obj.set_station("羅臼")
     temperature_list = obj.get_temperature_list(date(2019, 12, 26), date(2020, 12, 25))
 
     print(temperature_list)

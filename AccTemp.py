@@ -23,13 +23,13 @@ class AccTempGui(AccTempFrame):
         wxglade_out.pyは直接編集しなくても良いようにする
     """
 
-    def __init__(self, *args, **kwds):
+    def __init__(self, *args, **kwargs):
         """
         画面の初期状態を作成する
         :param args:
-        :param kwds:
+        :param kwargs:
         """
-        super(AccTempGui, self).__init__(*args, **kwds)
+        super(AccTempGui, self).__init__(*args, **kwargs)
         self.meteorological_agency = MeteorologicalAgency()
         prefecture_list = self.meteorological_agency.get_prefecture_list()
         self.combo_box_prefecture.SetItems(prefecture_list)
@@ -60,6 +60,8 @@ class AccTempGui(AccTempFrame):
         except openpyxl.utils.exceptions.InvalidFileException as e:  # 不正なファイルが指定された場合
             error_text = "指定された'" + filename + "'は、EXCELファイルではありません"
             self.text_ctrl_message.SetValue(error_text)
+            print(e)
+            print(type(e))  # ログ用
             return
 
         except FileNotFoundError as e:  # 指定されたファイルが存在しない場合

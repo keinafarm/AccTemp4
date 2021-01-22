@@ -185,7 +185,7 @@ if __name__ == "__main__":
     print(obj1)
     obj2 = TemperatureCalculator(date(2019, 12, 26), date(2020, 12, 26), met)
     print(obj2)
-    obj3 = TemperatureCalculator(date(2020, 1, 27), date(2020, 2, 15),met)
+    obj3 = TemperatureCalculator(date(2020, 1, 27), date(2020, 2, 15), met)
     print(obj3)
     obj4 = TemperatureCalculator(date(2019, 1, 26), date(2020, 2, 15), met)
     print(obj4)

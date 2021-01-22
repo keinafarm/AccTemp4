@@ -44,6 +44,7 @@ class LastUserInput:
                 return True
 
         except FileNotFoundError as e:
+            print(e)
             return False
 
         except Exception as e:

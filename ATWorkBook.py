@@ -170,9 +170,10 @@ class ATSheet:
         """
 
         # 指定されたカラム名と同じ文字列を見つけたら、その位置を記憶する
-        self.column_position = [None, None, None, None, None, None]         # 記憶する場所
+        self.column_position = [None, None, None, None, None, None]  # 記憶する場所
+        # タイトル名として比較する文字列のリスト
         compare_list = [start_date, end_date, target_temperature, current_temperature, rate, estimate_date]
-                                                                            #
+
         for cell in self.work_sheet.iter_cols(min_row=line_no, max_row=line_no):
             value = cell[0].value
             index = compare_list.index(value) if value in compare_list else None
