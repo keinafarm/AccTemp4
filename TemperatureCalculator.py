@@ -2,7 +2,7 @@
 
 from MeteorologicalAgency import MeteorologicalAgency
 import pandas as pd
-from datetime import date
+from datetime import datetime, date
 
 """
     気温データを扱う
@@ -99,7 +99,11 @@ class TemperatureCalculator:
 #           print(current_day, temperature, accumulated_temperature)
 
         if accumulated_temperature >= target_temperature:
-            return current_day.to_pydatetime()  # Pandas.Timestampをpython datetimeに変換して返す
+            return_day = current_day.to_pydatetime()
+            print(type(return_day))
+            return_day2 = return_day.date()
+            print(type(return_day2))
+            return return_day2  # Pandas.Timestampをpython datetimeに変換して返す
 
         # 平年温度が取得できているかチェックする
         last_day = date(self.end_date.year - 1, self.end_date.month, self.end_date.day)

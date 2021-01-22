@@ -181,7 +181,7 @@ class ATSheet:
                 self.column_position[index] = cell[0].column
 
         self.rows = []
-        for row_data in self.work_sheet.iter_rows(min_row=3):
+        for row_data in self.work_sheet.iter_rows(min_row=line_no+1):
             row_obj = ATRow(row_data, self.column_position)
             self.rows.append(row_obj)
 
