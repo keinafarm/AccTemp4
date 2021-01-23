@@ -245,7 +245,8 @@ class AccTempGui(AccTempFrame):
         if self.combo_box_station.GetStringSelection() == "":
             error_text += " 地点が指定されていません\n"
         if self.spin_ctrl_title_line_no.GetValue() <= 0:
-            error_text += " タイトルの行番号が指定されていません\n        if len(self.check_list_box_target_sheet_name.GetCheckedStrings()) == 0:
+            error_text += " タイトルの行番号が指定されていません\n"
+        if len(self.check_list_box_target_sheet_name.GetCheckedStrings()) == 0:
             error_text += " 対象となるシート名が指定されていません\n"
         if self.combo_box_start_date.GetStringSelection() == '':
             error_text += " 積算温度起算日のカラムが指定されていません\n"
