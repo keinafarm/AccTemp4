@@ -143,7 +143,7 @@ class TemperatureCalculator:
             print(type(return_day))
             return_day2 = return_day.date()
             print(type(return_day2))
-            return return_day2  # Pandas.Timestampをpython datetimeに変換して返す
+            return change_to_date(return_day2)  # Pandas.Timestampをpython datetimeに変換して返す
 
         # 平年温度が取得できているかチェックする
         last_day = change_to_datetime(date(self.end_date.year - 1, self.end_date.month, self.end_date.day))

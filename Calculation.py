@@ -80,7 +80,7 @@ def data_operator(field_data, accumulated_temperature_function, estimate_date_fu
         field_data.current_temperature = current_temperature
         # field_data.current_temperatureに直接値を入れると、読み出し時Noneになる可能性がある
         field_data.rate = current_temperature / field_data.target_temperature
-        field_data.estimate_date = estimate_date_function(field_data.start_date, field_data.target_temperature).date()
+        field_data.estimate_date = estimate_date_function(field_data.start_date, field_data.target_temperature)
 
 
 ####################

@@ -1,1 +1,1 @@
-pyinstaller AccTemp.py --onefile --noconsole
+pyinstaller AccTemp.py --onefile
