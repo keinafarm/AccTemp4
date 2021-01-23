@@ -13,6 +13,7 @@ class LastUserInput:
     """
     前回のユーザー入力を記憶するクラス
     """
+
     def __init__(self, gui):
         """
         コンストラクタ
@@ -57,18 +58,19 @@ class LastUserInput:
         :param f: 読み出すファイル
         :return:
         """
-        load_data = pickle.load(f)              # Dict型のload_data変数にファイルの内容を読み出す
+        load_data = pickle.load(f)  # Dict型のload_data変数にファイルの内容を読み出す
         print(load_data)
 
-        self.gui.text_ctrl_input_filename.SetValue(load_data["text_ctrl_input_filename"])   # 入力ファイル名（冗長だけど、、、）
-        self.gui.combo_box_prefecture.SetStringSelection(load_data["combo_box_prefecture"]) # 県名
-        self.gui.onPrefectureSelected(None)         # 県名が確定したらイベントを発生させ地点名リストを得る
-        self.gui.combo_box_station.SetStringSelection(load_data["combo_box_station"])   # 地点名をセットする
-        self.gui.onStationSelected(None)            # 地点名が確定したらイベントを発生させ気象庁クラスに地点名を通知する
-        self.gui.spin_ctrl_title_line_no.SetValue(load_data["spin_ctrl_title_line_no"]) # 行番号をセットする
-        self.gui.onStationSelected(None)            # 行番号が確定したイベント
-        self.gui.check_list_box_target_sheet_name.SetCheckedStrings(load_data["check_list_box_target_sheet_name"])  # シート名
-        self.gui.onTargetSheetSelected(None)        # 行番号とシート名が確定したらカラム名を取得する為イベントを発生させる
+        self.gui.text_ctrl_input_filename.SetValue(load_data["text_ctrl_input_filename"])  # 入力ファイル名（冗長だけど、、、）
+        self.gui.combo_box_prefecture.SetStringSelection(load_data["combo_box_prefecture"])  # 県名
+        self.gui.onPrefectureSelected(None)  # 県名が確定したらイベントを発生させ地点名リストを得る
+        self.gui.combo_box_station.SetStringSelection(load_data["combo_box_station"])  # 地点名をセットする
+        self.gui.onStationSelected(None)  # 地点名が確定したらイベントを発生させ気象庁クラスに地点名を通知する
+        self.gui.spin_ctrl_title_line_no.SetValue(load_data["spin_ctrl_title_line_no"])  # 行番号をセットする
+        self.gui.onStationSelected(None)  # 行番号が確定したイベント
+        self.gui.check_list_box_target_sheet_name.SetCheckedStrings(
+            load_data["check_list_box_target_sheet_name"])  # シート名
+        self.gui.onTargetSheetSelected(None)  # 行番号とシート名が確定したらカラム名を取得する為イベントを発生させる
         self.gui.combo_box_start_date.SetStringSelection(load_data["combo_box_start_date"])
         self.gui.combo_box_start_date.SetStringSelection(load_data["combo_box_start_date"])
         self.gui.combo_box_end_date.SetStringSelection(load_data["combo_box_end_date"])
@@ -112,4 +114,4 @@ class LastUserInput:
                      "combo_box_estimate_date": self.gui.combo_box_estimate_date.GetStringSelection(),
                      "text_ctrl_output_filename": self.gui.text_ctrl_output_filename.GetValue(),
                      }
-        pickle.dump(save_data, f)           # 作った変数をファイルに保存
+        pickle.dump(save_data, f)  # 作った変数をファイルに保存

@@ -72,7 +72,7 @@ def data_operator(field_data, accumulated_temperature_function, estimate_date_fu
                                                                               field_data.end_date)
             return  # 開始日:○ 終了日:○ and 過去日 目標積算温度:☓ 現状積算温度:☓-> (開始日：終了日まで）現状積算温度
 
-    elif field_data.estimate_date is not None and field_data.estimate_date < dt.date(today):
+    elif field_data.estimate_date is not None and field_data.estimate_date < today.date():
         return  # 開始日:○ 終了日:○ and 過去日 目標積算温度:○ 現状積算温度:○  予測終了日:○ and 過去日-> 無視
     else:
         # 開始日:○ 終了日:○ and 過去日 目標積算温度:○ 現状積算温度:○  予測終了日:☓ or 未達-> (開始日：終了日まで）現状積算温度,目標到達度,(開始日：前日まで）予測終了日を計算
